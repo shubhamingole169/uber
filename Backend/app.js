@@ -10,6 +10,7 @@ app.use(cors()); // Use CORS middleware
 const connectToDB = require('./db/db')
 
 const userRoutes = require('./routes/user.routes')
+const captainRoutes = require('./routes/captain.routes')
 
 
 app.use(express.urlencoded({extended: true}));
@@ -24,7 +25,12 @@ app.get('/', (req, res) => {
 });
 
 app.use(express.json());
+
+// user routes
 app.use('/users', userRoutes)
+
+// captaine routes
+app.use('/captains', captainRoutes);
 
 
 
