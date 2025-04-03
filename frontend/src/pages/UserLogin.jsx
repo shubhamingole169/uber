@@ -1,20 +1,40 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import { UserDataContext } from './../context/UserContext';
+import axios from 'axios'
+
+
 
 const UserLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [userData, setUserData] = useState({})
+    const [userData, setUserData] = useState({});
 
-    const submitHandler = (e) => {
+    const {user, setUser} = useContext(UserDataContext);
+    const navigate = useNavigate()
+
+
+    const submitHandler = async(e) => {
         e.preventDefault();
-        // console.log(email, password);
-        setUserData({
+
+        const userData = {
             email: email,
             password: password
-        })
+        }
 
-        // console.log(userData)
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
+    
+            if(response.status === 200){
+                const data = response.data
+                setUser(data.user)
+                localStorage.setItem('token', data.token)
+                navigate('/home')
+            }
+        } catch (error) {
+            console.log(`error: ${error}`)
+        }
+
         setEmail('');
         setPassword('');
     }
@@ -22,7 +42,7 @@ const UserLogin = () => {
     return (
     <div className='p-7 h-screen flex  flex-col justify-between'>
         <div>
-        <img className='w-16 ml-8' src="https://download.logo.wine/logo/Uber/Uber-Logo.wine.png" alt=""/>
+        <img className='w-16 ml-8' src="https://download.logo.wine/logo/Uber/Uber-Logo.wine.png"/>
         <form onSubmit={(e) => {submitHandler(e)}}>
             <h3 className='text-x font-medium mb-2'>Whats your email</h3>
             <input
