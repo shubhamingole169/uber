@@ -14,5 +14,4 @@ const connectToDB = async () => {
     }
 };
 
-// Use CommonJS export syntax
 module.exports = connectToDB;
